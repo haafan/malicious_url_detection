@@ -1,168 +1,80 @@
-# 🔐 AI-Based Malicious URL Detection
+# Machine Learning for Malicious URL Classification
 
-## 📌 Overview
+A supervised machine-learning project that classifies URLs using the ISCX-URL2016 dataset and pre-engineered numerical URL features.
 
-This project presents a machine learning-based system for detecting malicious URLs using the **ISCX-URL2016 dataset**. The task is formulated as a **multi-class classification problem**, where URLs are categorized into:
+## Problem
 
-* Benign
-* Phishing
-* Malware
-* Defacement
-* Spam
+Malicious URLs are commonly associated with phishing, malware distribution, spam and defacement. This project studies a multi-class classification approach using structural and statistical URL features rather than raw URL strings.
 
-Unlike traditional approaches that rely on raw text, this project uses **pre-engineered numerical features** (≈70–80 features) describing structural and statistical properties of URLs.
+## Dataset
 
----
+- **Dataset:** ISCX-URL2016
+- **Samples:** approximately 26,953 (as documented in the experiment)
+- **Features:** 72 numerical features
+- **Target column:** `URL_Type_obf_Type`
+- **Classes:** benign, phishing, malware, defacement and spam
 
-## 🎯 Objectives
+The repository includes the notebook, a CSV data file, model artefacts and figures. Review the dataset's original terms and citation requirements before redistribution.
 
-* Build an AI model to detect malicious URLs
-* Achieve high classification accuracy
-* Minimize False Positive Rate (FPR)
-* Analyze feature importance and interpret model behavior
+## Methodology
 
----
+1. Inspect the dataset and target distribution.
+2. Handle missing and infinite values and examine extreme values.
+3. Remove low-variance features.
+4. Rank features using XGBoost feature importance and investigate a top-40 subset.
+5. Compare Logistic Regression, Random Forest and XGBoost.
+6. Use stratified splitting and randomized hyperparameter search.
+7. Evaluate with accuracy, precision, recall, F1-score, ROC-AUC and false-positive rate.
 
-## 📊 Dataset
+## Reported experiment results
 
-* **Source:** ISCX-URL2016
-* **Samples:** ~26,953
-* **Features:** 72 numerical features
-* **Target:** `URL_Type_obf_Type`
+The existing project report records the following results for its selected run:
 
-The dataset contains engineered features such as:
+| Metric | Reported value |
+|---|---:|
+| Accuracy | 97.18% |
+| Weighted F1-score | 97.16% |
+| ROC-AUC | 0.9983 |
+| Mean false-positive rate | 0.75% |
 
-* Entropy measures
-* URL length
-* Token counts
-* Structural characteristics
+These are the results documented by the project, not a guarantee of performance on new or live URLs. In particular, the notebook notes weaker malware recall (approximately 70%), which deserves focused error analysis.
 
----
+## Run
 
-## ⚙️ Methodology
-
-### 🔹 1. Data Preprocessing
-
-* Handling missing values (`NaN`)
-* Removing infinite values (`inf`)
-* Clipping extreme values
-* Removing low-variance features (VarianceThreshold)
-
----
-
-### 🔹 2. Feature Selection
-
-* Based on **XGBoost feature importance**
-* Optimal subset: **Top-40 features**
-
----
-
-### 🔹 3. Models Used
-
-* Logistic Regression (baseline)
-* Random Forest
-* **XGBoost (best performing model)**
-
----
-
-### 🔹 4. Training Strategy
-
-* Stratified train/test split
-* Hyperparameter tuning using **RandomizedSearchCV**
-* Evaluation using:
-
-  * Accuracy
-  * Precision
-  * Recall
-  * F1-score
-  * ROC-AUC
-  * False Positive Rate (FPR)
-
----
-
-## 📈 Results
-
-| Metric              | Value      |
-| ------------------- | ---------- |
-| Accuracy            | **97.18%** |
-| F1-score (weighted) | **97.16%** |
-| ROC-AUC             | **0.9983** |
-| Mean FPR            | **0.75%**  |
-
-### 🔍 Key Observations
-
-* Excellent overall performance
-* Very low false positive rate
-* Slight weakness in **malware recall (~70%)**
-
----
-
-## 🧠 Feature Importance
-
-* Entropy-based features are highly influential
-* Structural complexity is a strong indicator of malicious URLs
-* XGBoost provides better feature discrimination than Random Forest
-
----
-
-## 📊 Visualizations
-
-The project includes:
-
-* Confusion Matrix
-* Feature Importance (XGBoost)
-* Model Comparison (RF vs XGBoost)
-* Feature Profile Heatmap
-
----
-
-## 🚀 How to Run
-
-### 1. Install dependencies
+Install the core dependencies:
 
 ```bash
-pip install pandas numpy scikit-learn xgboost matplotlib seaborn joblib
+pip install pandas numpy scikit-learn xgboost matplotlib seaborn joblib jupyter
 ```
 
-### 2. Run notebook
+Then launch:
 
 ```bash
 jupyter notebook malicious_url_detection.ipynb
 ```
 
----
+Check the notebook's data and model paths before running. The CSV in this repository is approximately 11 MB.
 
-## ⚠️ Important Notes
+## Important limitations
 
-* This project uses **tabular data**, not raw URLs
-* Deep learning was not used because:
+- The model consumes pre-engineered numerical features, not raw URL strings.
+- A production system would need a reliable and safe feature-extraction pipeline.
+- Dataset-level results may not generalize to new campaigns, domains or temporal shifts.
+- Malware recall is a known weakness in the reported experiment.
+- Evaluation should guard against duplicate records and train/test leakage.
 
-  * The dataset is already feature-engineered
-  * Tree-based models perform better on structured data
+## Further work
 
----
+- Add raw-URL feature extraction and a documented inference API.
+- Use temporal or domain-separated evaluation to test generalization.
+- Report per-class precision/recall and a confusion matrix.
+- Investigate class imbalance and malware false negatives.
+- Add reproducible environment and data-version information.
 
-## 🧩 Limitations
+## Tech stack
 
-* Lower recall for malware detection
-* Model cannot directly process raw URLs without feature extraction
+Python · Pandas · scikit-learn · XGBoost · Matplotlib · Seaborn · Jupyter
 
----
+## License
 
-## 🔮 Future Work
-
-* Improve malware detection using class balancing techniques
-* Implement full URL feature extraction pipeline
-* Explore deep learning on raw URL text
-
----
-
-## 👨‍💻 Author
-
-* Mini-project (2025–2026)
-
----
-
-## 📜 License
-
-This project is for academic purposes.
+No license is currently specified. Contact the repository owner before reuse.
